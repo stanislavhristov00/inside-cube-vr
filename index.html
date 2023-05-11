@@ -9,7 +9,83 @@
 </head>
 <body>
    <script>
+      vaxInit();
+      var cubeGeometry = new THREE.BoxGeometry(100, 100, 100, 20, 20);
+      var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x250b26});
+
+      var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+      cubeMaterial.side = THREE.DoubleSide;
+
+      var wireGeometry = new THREE.WireframeGeometry(cubeGeometry);
+      var lines = new THREE.LineSegments(wireGeometry);
+      lines.material.color = new THREE.Color(0x831387);
+
+      scene.add(cube);
+      scene.add(lines);
+
+      camera.position.set(0, 0, 0);
+      light.position.set(0, 0, 0);
+      light.intensity = 0.65;
+
+      var coneGeometry = new THREE.ConeGeometry(2, 8, 32);
+      var coneMaterial = new THREE.MeshLambertMaterial();
+      cones = [];
+
+      // We will use this counter to decide on which wall each cone will reside.
+      var counter = 0;
+
+      for (var i = 0; i < 1000; i++) {
+         cones.push(new THREE.Mesh(coneGeometry, coneMaterial.clone()));
+
+         var coneWireGeometry = new THREE.WireframeGeometry(coneGeometry);
+         var coneLines = new THREE.LineSegments(coneWireGeometry);
+         var color = Math.random() * 0xffffff;
+         coneLines.material.color.setHex(color);
+
+         cones[i].add(coneLines);
+         cones[i].material.color.setHex(color);
+
+         cones[i].position.set(THREE.MathUtils.randFloat(-50, 50), THREE.MathUtils.randFloat(-50, 50), THREE.MathUtils.randFloat(-50, 50));
+         scene.add(cones[i]);
+
+         var side = counter % 6;
+         counter++;
+
+         if (side == 0) cones[i].position.x = 50;
+         if (side == 1) cones[i].position.x = -50;
+         if (side == 2) cones[i].position.y = -50;
+         if (side == 3) cones[i].position.y = 50;
+         if (side == 4) cones[i].position.z = -50;
+         if (side == 5) cones[i].position.z = 50;
+      }
+
+      function deviceOrientation(event) {
+				var alpha = event.alpha,
+					gamma = event.gamma;
+
+				if( alpha === null ) return;
+
+				if( gamma>=0 )
+					gamma = 90-gamma;
+				else
+				{
+					alpha = 180 - alpha;
+					gamma = -90-gamma;
+				}
+
+				// правим ги на радиани
+				alpha = THREE.MathUtils.degToRad( alpha );
+				gamma = THREE.MathUtils.degToRad( gamma );
+
+				// въртим камерата
+				camera.rotation.set( gamma, alpha, 0, 'YXZ' );
+      }
+
+      window.addEventListener("deviceorientation", deviceOrientation, true);
+
+      function animate(t) {
+         // camera.rotation.set(t/2, 0, 0);
+      }
    </script>
-   test
 </body>
 </html>
