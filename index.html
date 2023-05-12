@@ -68,16 +68,16 @@
 
 				// поправяме ги, за да ни е удобно
 				if( gamma>=0 )
-               gamma = -90-gamma;
+               gamma = 90-gamma;
 				else
 				{
 					alpha = alpha+180;
-               gamma = 90-gamma;
+               gamma = -90-gamma;
 				}
 
 				// правим ги на радиани
 				alpha = THREE.MathUtils.degToRad( alpha );
-				gamma = THREE.MathUtils.degToRad( gamma );
+				gamma = THREE.MathUtils.degToRad( -gamma );
 
 				// въртим камерата
 				camera.rotation.set( gamma, alpha, 0, 'YXZ' );
