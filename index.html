@@ -9,6 +9,9 @@
 </head>
 <body>
    <script>
+      // Phone should be in ladnscape mode with the top pointing to the right
+      // before the app is loaded in. Automatic orientation should be turned off.
+
       vaxInit();
       var cubeGeometry = new THREE.BoxGeometry(100, 100, 100, 20, 20);
       var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x250b26});
@@ -51,35 +54,54 @@
          var side = counter % 6;
          counter++;
 
-         if (side == 0) cones[i].position.x = 50;
-         if (side == 1) cones[i].position.x = -50;
-         if (side == 2) cones[i].position.y = -50;
-         if (side == 3) cones[i].position.y = 50;
-         if (side == 4) cones[i].position.z = -50;
-         if (side == 5) cones[i].position.z = 50;
+         switch (side) {
+            case 0: {
+               cones[i].position.x = 50;
+               break;
+            }
+            case 1: {
+               cones[i].position.x = -50;
+               break;
+            }
+            case 2: {
+               cones[i].position.y = -50;
+               break;
+            }
+            case 3: {
+               cones[i].position.y = 50;
+               break;
+            }
+            case 4: {
+               cones[i].position.z = -50;
+               break;
+            }
+            case 5: {
+               cones[i].position.z = 50;
+               break;
+            }
+            default: {
+               console.log("Something went terribly wrong")
+            }
+         }
       }
 
       function deviceOrientation(event) {
-				// взимаме ъглите
-				var alpha = event.alpha,
-					gamma = event.gamma;
+				var alpha = event.alpha;
+				var gamma = event.gamma;
 
 				if( alpha === null ) return;
 
-				// поправяме ги, за да ни е удобно
-				if( gamma>=0 )
-               gamma = 90-gamma;
-				else
-				{
-					alpha = alpha+180;
-               gamma = -90-gamma;
+				if( gamma >= 0 ) {
+               gamma = 90 - gamma;
+            }
+				else {
+					alpha = alpha + 180;
+               gamma = -90 - gamma;
 				}
 
-				// правим ги на радиани
 				alpha = THREE.MathUtils.degToRad( alpha );
 				gamma = THREE.MathUtils.degToRad( -gamma );
 
-				// въртим камерата
 				camera.rotation.set( gamma, alpha, 0, 'YXZ' );
       }
 
